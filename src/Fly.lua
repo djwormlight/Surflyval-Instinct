@@ -1,9 +1,5 @@
-
-
 local Fly = {}
 Fly.__index = Fly
-
-local wasButtonPressed = false
 
 local FlyState = {
     FLYING = "flying",
@@ -80,7 +76,7 @@ function Fly:DrawDebugInfo()
 
     -- Get the width of the text to properly position it in the top right corner
     local text = string.format("Fly Angle: %.2f°", angleDegrees)
-    
+
     self:DebugText(text)
 end
 
