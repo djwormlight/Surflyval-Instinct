@@ -73,7 +73,13 @@ function GameWorld:update(deltaTime)
 end
 
 function GameWorld:draw(renderContext)
-    renderContext:drawGameWorld(self)
+    if self.state == "playing" then
+        renderContext:drawPlayingScreen(self)
+    elseif self.state == "retryScreen" then
+        renderContext:drawRetryScreen(self)
+    elseif self.state == "startScreen" then
+        renderContext:drawStartScreen(self)
+    end
 end
 
 function GameWorld:reset()
