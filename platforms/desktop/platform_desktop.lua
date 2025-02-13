@@ -18,6 +18,33 @@ local FrameAction = {
     HOLD = "HOLD"
 }
 
+FoodAnimationFrames = {
+    burger = {
+        asset:load("food/burger-01.png")
+    },
+    corn = {
+        asset:load("food/corn-01.png")
+    },
+    energydrink = {
+        asset:load("food/energydrink-01.png")
+    },
+    orange = {
+        asset:load("food/orangesoda-01.png")
+    },
+    pancakes = {
+        asset:load("food/pancakes-01.png")
+    },
+    pizza = {
+        asset:load("food/pizza-01.png")
+    },
+    shrimpcocktail = {
+        asset:load("food/shrimpcocktail-01.png")
+    },
+    sushi = {
+        asset:load("food/sushi-01.png")
+    }
+}
+
 FlyAnimationFrames = {
     [FlyState.FLYING] = {
         {
@@ -180,13 +207,19 @@ function PlatformDesktop:drawFly(fly)
 end
 
 function PlatformDesktop:drawFood(food)
+    local objId = tostring(food)
+
+    self.animations[objId] = self.animations[objId] or Animation:new(FoodAnimationFrames[food.type])
+
     love.graphics.push()
 
     love.graphics.translate(food.x, food.y)
 
     love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(food.activeAnimation[food.frame], -food.activeAnimation[food.frame]:getWidth() / 2, -food.activeAnimation[food.frame]:getHeight() / 2)
+    local currentFrame = self.animations[objId]:getCurrentFrame()
+
+    love.graphics.draw(currentFrame, -currentFrame:getWidth() / 2, -currentFrame:getHeight() / 2)
 
     -- Set the color for the hitbox (e.g., red)
     love.graphics.setColor(1, 0, 0, 0.5)  -- Red with 50% transparency

@@ -47,10 +47,10 @@ function GameWorld:update(deltaTime)
             return
         end
 
-        for i, v in ipairs(self.foods) do
-            v:update(deltaTime)
+        for index, food in ipairs(self.foods) do
+            food:update(deltaTime)
 
-            if self.fly:isResting() and self.fly:isCollidingWith(v) then
+            if self.fly:isResting() and self.fly:isCollidingWith(food) then
                 self.hungerMeter:foodBeingEaten(deltaTime)
             end
         end
@@ -86,11 +86,17 @@ function GameWorld:reset()
 
     self.foods = {}
 
-    local foodTypes = {"burger", "corn", "energy", "orange", "pancakes", "pizza", "shrimp", "sushi"}
+    local foodTypes = {"burger", "corn", "energydrink", "orange", "pancakes", "pizza", "shrimpcocktail", "sushi"}
 
-    table.insert(self.foods, Food:new(foodTypes[math.random(#foodTypes)], math.random(100, 700), math.random(100, 500)))
-    table.insert(self.foods, Food:new(foodTypes[math.random(#foodTypes)], math.random(100, 700), math.random(100, 500)))
-    table.insert(self.foods, Food:new(foodTypes[math.random(#foodTypes)], math.random(100, 700), math.random(100, 500)))
+    for i = 1, 3 do
+        local foodType = foodTypes[math.random(#foodTypes)]
+
+        local imageData = love.image.newImageData("assets/food/" .. foodType .. "-01.png")
+
+        local foodSize = { imageData:getWidth(), imageData:getHeight() }
+
+        table.insert(self.foods, Food:new(foodType, math.random(100, 700), math.random(100, 500), foodSize[1], foodSize[2]))
+    end
 
     self.hungerMeter = HungerMeter:new()
 
