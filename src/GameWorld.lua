@@ -77,7 +77,7 @@ function GameWorld:draw(renderContext)
         love.graphics.draw(self.background, 0, 0)
 
         for i, v in ipairs(self.foods) do
-            v:draw()
+            v:draw(renderContext)
         end
 
         self.fly:draw()
@@ -88,7 +88,7 @@ function GameWorld:draw(renderContext)
         love.graphics.draw(self.background, 0, 0)
 
         for i, v in ipairs(self.foods) do
-            v:draw()
+            v:draw(renderContext)
         end
 
         self.fly:draw()

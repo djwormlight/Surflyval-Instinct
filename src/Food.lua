@@ -52,30 +52,8 @@ function Food:update()
 
 end
 
-function Food:draw()
-    love.graphics.push()
-
-    love.graphics.translate(self.x, self.y)
-
-    love.graphics.setColor(1, 1, 1)
-
-    love.graphics.draw(self.activeAnimation[self.frame], -self.activeAnimation[self.frame]:getWidth() / 2, -self.activeAnimation[self.frame]:getHeight() / 2)
-
-    -- Set the color for the hitbox (e.g., red)
-    love.graphics.setColor(1, 0, 0, 0.5)  -- Red with 50% transparency
-
-    -- Draw the hitbox rectangle
-    love.graphics.rectangle(
-        "line",  -- Draw only the outline of the rectangle
-        -self.width / 2,  -- Top-left corner X (relative to the origin)
-        -self.height / 2, -- Top-left corner Y (relative to the origin)
-        self.width,  -- Width of the rectangle
-        self.height  -- Height of the rectangle
-    )
-
-    love.graphics.setColor(1, 1, 1)
-
-    love.graphics.pop()
+function Food:draw(renderContext)
+    renderContext:drawFood(self)
 end
 
 return Food
