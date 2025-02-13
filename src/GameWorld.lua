@@ -72,7 +72,7 @@ function GameWorld:update(deltaTime)
     end
 end
 
-function GameWorld:draw()
+function GameWorld:draw(renderContext)
     if self.state == "playing" then
         love.graphics.draw(self.background, 0, 0)
 
@@ -81,9 +81,9 @@ function GameWorld:draw()
         end
 
         self.fly:draw()
-        self.hand:draw()
+        self.hand:draw(renderContext)
 
-        self.hungerMeter:draw()
+        self.hungerMeter:draw(renderContext)
     elseif self.state == "retryScreen" then
         love.graphics.draw(self.background, 0, 0)
 
@@ -92,7 +92,7 @@ function GameWorld:draw()
         end
 
         self.fly:draw()
-        self.hand:draw()
+        self.hand:draw(renderContext)
 
         -- Draw the retry screen overlay
         love.graphics.setColor(0, 0, 0, 0.7)

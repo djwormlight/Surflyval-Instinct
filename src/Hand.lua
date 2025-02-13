@@ -75,16 +75,8 @@ function Hand:update(deltaTime, fly, hungermeter)
     end
 end
 
-function Hand:draw()
-    love.graphics.push()
-
-    love.graphics.translate(self.x, self.y)
-
-    love.graphics.setColor(1, 1, 1)
-
-    love.graphics.draw(self.activeAnimation[self.frame], -self.activeAnimation[self.frame]:getWidth() / 2, -self.activeAnimation[self.frame]:getHeight() / 2)
-
-    love.graphics.pop()
+function Hand:draw(renderContext)
+    renderContext:drawHand(self)
 end
 
 function Hand:isColliding(fly)

@@ -46,25 +46,8 @@ function HungerMeter:update(deltaTime)
     end
 end
 
-function HungerMeter:draw()
-    love.graphics.push()
-
-    -- Draw the background of the hunger meter
-    love.graphics.setColor(0.7, 0.11, 0.14)  -- Red color for the background
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-
-    -- Draw the filled portion representing the current hunger value
-    local fillWidth = (self.value / self.maxValue) * self.width
-    love.graphics.setColor(0.7, 0.9, 0.11)  -- Green color for the filled portion
-    love.graphics.rectangle("fill", self.x, self.y, fillWidth, self.height)
-
-    -- Optionally, draw the outline of the hunger meter
-    love.graphics.setColor(0, 0, 0)  -- White color for the outline
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
-
-    love.graphics.setColor(1,1,1)
-
-    love.graphics.pop()
+function HungerMeter:draw(render_context)
+    render_context:drawHungerMeter(self)
 end
 
 return HungerMeter
