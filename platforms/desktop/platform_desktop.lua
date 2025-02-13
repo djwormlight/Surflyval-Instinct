@@ -7,6 +7,18 @@ function PlatformDesktop:new()
     return instance
 end
 
+function PlatformDesktop:drawFly(fly)
+    love.graphics.push()
+
+    love.graphics.translate(fly.x, fly.y)
+    -- love.graphics.rotate(self.angle)
+    love.graphics.setColor(1, 1, 1)
+
+    love.graphics.draw(fly.activeAnimation[fly.frame], -fly.activeAnimation[fly.frame]:getWidth() / 2, -fly.activeAnimation[fly.frame]:getHeight() / 2)
+
+    love.graphics.pop()
+end
+
 function PlatformDesktop:drawFood(food)
     love.graphics.push()
 

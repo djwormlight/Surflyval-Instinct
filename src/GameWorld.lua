@@ -80,7 +80,7 @@ function GameWorld:draw(renderContext)
             v:draw(renderContext)
         end
 
-        self.fly:draw()
+        self.fly:draw(renderContext)
         self.hand:draw(renderContext)
 
         self.hungerMeter:draw(renderContext)
@@ -91,7 +91,7 @@ function GameWorld:draw(renderContext)
             v:draw(renderContext)
         end
 
-        self.fly:draw()
+        self.fly:draw(renderContext)
         self.hand:draw(renderContext)
 
         -- Draw the retry screen overlay

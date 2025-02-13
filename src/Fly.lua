@@ -161,19 +161,8 @@ function Fly:update(deltaTime, joystick)
     end
 end
 
-function Fly:draw()
-    love.graphics.push()
-
-    love.graphics.translate(self.x, self.y)
-    -- love.graphics.rotate(self.angle)
-    love.graphics.setColor(1, 1, 1)
-
-    love.graphics.draw(self.activeAnimation[self.frame], -self.activeAnimation[self.frame]:getWidth() / 2, -self.activeAnimation[self.frame]:getHeight() / 2)
-
-    love.graphics.pop()
-
-    -- debug
-    -- self:DrawDebugInfo()
+function Fly:draw(renderContext)
+    renderContext:drawFly(self)
 end
 
 function Fly:DrawDebugInfo()
