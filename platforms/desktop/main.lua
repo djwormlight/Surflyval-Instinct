@@ -22,6 +22,8 @@ end
 
 function love.update(deltaTime)
     gameWorld:update(deltaTime)
+
+    platformContext:updateAnimations(deltaTime)
 end
 
 function love.draw()

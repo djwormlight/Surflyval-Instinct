@@ -1,10 +1,112 @@
 local PlatformDesktop = {}
 PlatformDesktop.__index = PlatformDesktop
 
+local Animation = require "Animation"
+
+local asset = require "asset"
+
+local FlyState = {
+    FLYING = "flying",
+    RESTING = "resting",
+    DEAD = "dead",
+    STARVED = "starved"
+}
+
+local FrameAction = {
+    SKIP = "SKIP",
+    STOP = "STOP",
+    HOLD = "HOLD"
+}
+
+FlyAnimationFrames = {
+    [FlyState.FLYING] = {
+        {
+            asset:load("fly/fly-01-01.png"),
+            asset:load("fly/fly-01-02.png")
+        },
+        {
+            asset:load("fly/fly-02-01.png"),
+            asset:load("fly/fly-02-02.png")
+        },
+        {
+            asset:load("fly/fly-03-01.png"),
+            asset:load("fly/fly-03-02.png")
+        },
+        {
+            asset:load("fly/fly-04-01.png"),
+            asset:load("fly/fly-04-02.png")
+        },
+        {
+            asset:load("fly/fly-05-01.png"),
+            asset:load("fly/fly-05-02.png")
+        },
+        {
+            asset:load("fly/fly-06-01.png"),
+            asset:load("fly/fly-06-02.png")
+        },
+        {
+            asset:load("fly/fly-07-01.png"),
+            asset:load("fly/fly-07-02.png")
+        },
+        {
+            asset:load("fly/fly-08-01.png"),
+            asset:load("fly/fly-08-02.png")
+        },
+        {
+            asset:load("fly/fly-09-01.png"),
+            asset:load("fly/fly-09-02.png")
+        },
+        {
+            asset:load("fly/fly-10-01.png"),
+            asset:load("fly/fly-10-02.png")
+        },
+        {
+            asset:load("fly/fly-11-01.png"),
+            asset:load("fly/fly-11-02.png")
+        },
+        {
+            asset:load("fly/fly-12-01.png"),
+            asset:load("fly/fly-12-02.png")
+        }
+    },
+    [FlyState.RESTING] = {
+        asset:load("fly/fly-rest-01.png"),
+        asset:load("fly/fly-rest-02.png"),
+    },
+    ["rubbing"] = {
+        asset:load("fly/fly-rub-01.png"),
+        asset:load("fly/fly-rub-02.png"),
+        asset:load("fly/fly-rub-03.png"),
+        asset:load("fly/fly-rub-04.png"),
+        asset:load("fly/fly-rub-05.png"),
+        asset:load("fly/fly-rub-06.png"),
+        asset:load("fly/fly-rub-07.png")
+    },
+    [FlyState.DEAD] = {
+        asset:load("fly/fly-dead-01.png"),
+        asset:load("fly/fly-dead-02.png"),
+        FrameAction.STOP
+    },
+    [FlyState.STARVED] = {
+        asset:load("fly/fly-starve-01.png"),
+        FrameAction.STOP
+    },
+}
+
+local previousState = {}
+
 function PlatformDesktop:new()
     local instance = setmetatable({}, PlatformDesktop)
 
+    instance.animations = {}
+
     return instance
+end
+
+function PlatformDesktop:updateAnimations(deltaTime)
+    for _key, animation in pairs(self.animations) do
+        animation:update(deltaTime)
+    end
 end
 
 function PlatformDesktop:drawPlayingScreen(gameWorld)
@@ -50,15 +152,31 @@ function PlatformDesktop:drawStartScreen()
 end
 
 function PlatformDesktop:drawFly(fly)
+    local objId = tostring(fly)
+
+    self.animations[objId] = self.animations[objId] or Animation:new()
+
+    if previousState[objId] ~= fly.state then
+        if fly.state == FlyState.FLYING then
+            self.animations[objId]:changeFrames(FlyAnimationFrames[FlyState.FLYING][fly:GetClockHour(fly.angle)])
+        else
+            self.animations[objId]:changeFrames(FlyAnimationFrames[fly.state])
+        end
+    end
+
     love.graphics.push()
 
     love.graphics.translate(fly.x, fly.y)
-    -- love.graphics.rotate(self.angle)
+
     love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(fly.activeAnimation[fly.frame], -fly.activeAnimation[fly.frame]:getWidth() / 2, -fly.activeAnimation[fly.frame]:getHeight() / 2)
+    local currentFrame = self.animations[objId]:getCurrentFrame()
+
+    love.graphics.draw(currentFrame, -currentFrame:getWidth() / 2, -currentFrame:getHeight() / 2)
 
     love.graphics.pop()
+
+    previousState[objId] = fly.state
 end
 
 function PlatformDesktop:drawFood(food)

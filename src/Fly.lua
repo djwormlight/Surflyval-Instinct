@@ -1,83 +1,15 @@
-local asset = require "asset"
+
 
 local Fly = {}
 Fly.__index = Fly
 
 local wasButtonPressed = false
 
-flyFlyingAnimation = {
-    {
-        asset:load("fly/fly-01-01.png"),
-        asset:load("fly/fly-01-02.png")
-    },
-    {
-        asset:load("fly/fly-02-01.png"),
-        asset:load("fly/fly-02-02.png")
-    },
-    {
-        asset:load("fly/fly-03-01.png"),
-        asset:load("fly/fly-03-02.png")
-    },
-    {
-        asset:load("fly/fly-04-01.png"),
-        asset:load("fly/fly-04-02.png")
-    },
-    {
-        asset:load("fly/fly-05-01.png"),
-        asset:load("fly/fly-05-02.png")
-    },
-    {
-        asset:load("fly/fly-06-01.png"),
-        asset:load("fly/fly-06-02.png")
-    },
-    {
-        asset:load("fly/fly-07-01.png"),
-        asset:load("fly/fly-07-02.png")
-    },
-    {
-        asset:load("fly/fly-08-01.png"),
-        asset:load("fly/fly-08-02.png")
-    },
-    {
-        asset:load("fly/fly-09-01.png"),
-        asset:load("fly/fly-09-02.png")
-    },
-    {
-        asset:load("fly/fly-10-01.png"),
-        asset:load("fly/fly-10-02.png")
-    },
-    {
-        asset:load("fly/fly-11-01.png"),
-        asset:load("fly/fly-11-02.png")
-    },
-    {
-        asset:load("fly/fly-12-01.png"),
-        asset:load("fly/fly-12-02.png")
-    }
-}
-
-flyRestAnimation = {
-    asset:load("fly/fly-rest-01.png"),
-    asset:load("fly/fly-rest-02.png"),
-}
-
-flyRubAnimation = {
-    asset:load("fly/fly-rub-01.png"),
-    asset:load("fly/fly-rub-02.png"),
-    asset:load("fly/fly-rub-03.png"),
-    asset:load("fly/fly-rub-04.png"),
-    asset:load("fly/fly-rub-05.png"),
-    asset:load("fly/fly-rub-06.png"),
-    asset:load("fly/fly-rub-07.png")
-}
-
-flyDeathAnimation = {
-    asset:load("fly/fly-dead-01.png"),
-    asset:load("fly/fly-dead-02.png")
-}
-
-flyStarveAnimation = {
-    asset:load("fly/fly-starve-01.png")
+local FlyState = {
+    FLYING = "flying",
+    RESTING = "resting",
+    DEAD = "dead",
+    STARVED = "starved"
 }
 
 function Fly:new(x, y)
@@ -93,15 +25,9 @@ function Fly:new(x, y)
     instance.speed = 200 * 3 * 1.6
     instance.rotationSpeed = math.rad(180)
 
-    instance.moving = false
-
     instance.windowWidth, instance.windowHeight = love.window.getMode()
 
-    instance.frame = 1
-    instance.frameTimer = 0
-    instance.frameInterval = 0.1
-
-    instance.activeAnimation = instance.moving and flyFlyingAnimation[1] or flyRubAnimation
+    instance.state = FlyState.FLYING
 
     -- 260 width x height
 
@@ -113,36 +39,19 @@ function Fly:update(deltaTime, input)
         return
     end
 
-    if self.isDead then
+    if self.state == FlyState.DEAD then
+        return
+    end
+
+    if self.state == FlyState.STARVED then
         return
     end
 
     local isButtonPressed = input:moveFly()
 
-    -- toggle fly moving
-    self.moving = isButtonPressed
+    self.state = isButtonPressed and FlyState.FLYING or FlyState.RESTING
 
-    local flyingDirectionIndex = self:GetClockHour(self.angle)
-
-    self.activeAnimation = self.moving and flyFlyingAnimation[flyingDirectionIndex] or flyRubAnimation
-
-    if isButtonPressed then
-        self.frame = 1
-        self.frameTimer = 0
-    end
-
-    self.frameTimer = self.frameTimer + deltaTime
-
-    if self.frameTimer >= self.frameInterval then
-        self.frame = self.frame % #self.activeAnimation + 1
-        self.frameTimer = 0
-    end
-
-    if self.moving then
-        local flyingDirectionIndex = self:GetClockHour(self.angle)
-
-        self.activeAnimation = self.moving and flyFlyingAnimation[flyingDirectionIndex] or flyRubAnimation
-
+    if self.state == FlyState.FLYING then
         local leftAxis = input:leftDirectionAxis() + 1
         local rightAxis = input:rightDirectionAxis() + 1
 
@@ -209,17 +118,19 @@ function Fly:GetClockHour(angle)
 end
 
 function Fly:triggerDeath()
-    self.isDead = true
-    self.activeAnimation = flyDeathAnimation
-    self.frame = 1
-    self.frameTimer = 0
+    self.state = FlyState.DEAD
 end
 
 function Fly:triggerStarve()
-    self.isDead = true
-    self.activeAnimation = flyStarveAnimation
-    self.frame = 1
-    self.frameTimer = 0
+    self.state = FlyState.STARVED
+end
+
+function Fly:isDead()
+    return self.state == FlyState.DEAD
+end
+
+function Fly:isResting()
+    return self.state == FlyState.RESTING
 end
 
 function Fly:isCollidingWith(food)

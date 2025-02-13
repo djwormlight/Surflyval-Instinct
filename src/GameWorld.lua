@@ -37,7 +37,7 @@ end
 
 function GameWorld:update(deltaTime)
     if self.state == "playing" then
-        if self.fly.isDead then
+        if self.fly:isDead() then
             self.state = "retryScreen"
             return
         end
@@ -50,7 +50,7 @@ function GameWorld:update(deltaTime)
         for i, v in ipairs(self.foods) do
             v:update(deltaTime)
 
-            if not self.fly.isDead and self.fly:isCollidingWith(v) and not self.fly.moving then
+            if self.fly:isResting() and self.fly:isCollidingWith(v) then
                 self.hungerMeter:foodBeingEaten(deltaTime)
             end
         end
