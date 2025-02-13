@@ -7,14 +7,17 @@ package.path = package.path .. ";../../src/?.lua"
 local GameWorld = require "GameWorld"
 
 local PlatformDesktop = require "platform_desktop"
+local InputDesktop = require "input_desktop"
 
 function love.load(arg)
     love.window.setMode(1024, 768, { resizable = true, vsync = 0, minwidth = 400, minheight = 300 })
     love.graphics.setBackgroundColor(1, 1, 1)
 
+    local input = InputDesktop:new()
+
     platformContext = PlatformDesktop:new()
 
-    gameWorld = GameWorld:new()
+    gameWorld = GameWorld:new(input)
 end
 
 function love.update(deltaTime)

@@ -108,8 +108,8 @@ function Fly:new(x, y)
     return instance
 end
 
-function Fly:update(deltaTime, joystick)
-    if not joystick then
+function Fly:update(deltaTime, input)
+    if not input then
         return
     end
 
@@ -117,7 +117,7 @@ function Fly:update(deltaTime, joystick)
         return
     end
 
-    local isButtonPressed = joystick:isDown(1)
+    local isButtonPressed = input:moveFly()
 
     -- toggle fly moving
     self.moving = isButtonPressed
@@ -143,8 +143,8 @@ function Fly:update(deltaTime, joystick)
 
         self.activeAnimation = self.moving and flyFlyingAnimation[flyingDirectionIndex] or flyRubAnimation
 
-        local leftAxis = joystick:getAxis(5) + 1
-        local rightAxis = joystick:getAxis(6) + 1
+        local leftAxis = input:leftDirectionAxis() + 1
+        local rightAxis = input:rightDirectionAxis() + 1
 
         if leftAxis > 0.1 then
             self.angle = (self.angle - self.rotationSpeed * leftAxis * deltaTime) % (math.pi * 2)

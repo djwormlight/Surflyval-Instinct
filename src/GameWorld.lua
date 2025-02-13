@@ -8,7 +8,7 @@ local Food = require "Food"
 local GameWorld = {}
 GameWorld.__index = GameWorld
 
-function GameWorld:new()
+function GameWorld:new(input)
     local instance = setmetatable({}, GameWorld)
 
     instance.background = asset:load("levels/background-01.png")
@@ -16,9 +16,7 @@ function GameWorld:new()
     instance.titleBackground = asset:load("screens/title.png")
     instance.retryBackground = asset:load("screens/gameover.png")
 
-    local joysticks = love.joystick.getJoysticks()
-
-    joystick = joysticks[1]
+    instance.input = input
 
     -- instance.fly = Fly:new(400, 300)
 
@@ -57,16 +55,16 @@ function GameWorld:update(deltaTime)
             end
         end
 
-        self.fly:update(deltaTime, joystick)
+        self.fly:update(deltaTime, self.input)
         self.hand:update(deltaTime, self.fly, self.hungerMeter)
 
         self.hungerMeter:update(deltaTime)
     elseif self.state == "retryScreen" then
-        if joystick:isDown(8) then
+        if self.input:continuePressed() then
             self:reset()
         end
     elseif self.state == "startScreen" then
-        if joystick:isDown(8) then
+        if self.input:continuePressed() then
             self:reset()
         end
     end
