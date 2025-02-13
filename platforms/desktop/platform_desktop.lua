@@ -7,6 +7,46 @@ function PlatformDesktop:new()
     return instance
 end
 
+function PlatformDesktop:drawGameWorld(gameWorld)
+    if gameWorld.state == "playing" then
+        love.graphics.draw(gameWorld.background, 0, 0)
+
+        for i, v in ipairs(gameWorld.foods) do
+            v:draw(self)
+        end
+
+        gameWorld.fly:draw(self)
+        gameWorld.hand:draw(self)
+
+        gameWorld.hungerMeter:draw(self)
+    elseif gameWorld.state == "retryScreen" then
+        love.graphics.draw(gameWorld.background, 0, 0)
+
+        for i, v in ipairs(gameWorld.foods) do
+            v:draw(self)
+        end
+
+        gameWorld.fly:draw(self)
+        gameWorld.hand:draw(self)
+
+        -- Draw the retry screen overlay
+        love.graphics.setColor(0, 0, 0, 0.7)
+        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.printf("Game Over! Press 'Start' to Retry", 0, love.graphics.getHeight() / 2, love.graphics.getWidth(), "center")
+    elseif gameWorld.state == "startScreen" then
+        love.graphics.draw(gameWorld.titleBackground, 0, 0)
+
+        -- -- Draw the retry screen overlay
+        -- love.graphics.setColor(0, 0, 0, 0.7)
+        -- love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+        -- love.graphics.setColor(1, 1, 1)
+        -- love.graphics.printf("Press Enter to Start", 0, love.graphics.getHeight() / 2, love.graphics.getWidth(), "center")
+    end
+end
+
 function PlatformDesktop:drawFly(fly)
     love.graphics.push()
 

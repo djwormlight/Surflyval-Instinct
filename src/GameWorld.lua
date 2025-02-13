@@ -73,43 +73,7 @@ function GameWorld:update(deltaTime)
 end
 
 function GameWorld:draw(renderContext)
-    if self.state == "playing" then
-        love.graphics.draw(self.background, 0, 0)
-
-        for i, v in ipairs(self.foods) do
-            v:draw(renderContext)
-        end
-
-        self.fly:draw(renderContext)
-        self.hand:draw(renderContext)
-
-        self.hungerMeter:draw(renderContext)
-    elseif self.state == "retryScreen" then
-        love.graphics.draw(self.background, 0, 0)
-
-        for i, v in ipairs(self.foods) do
-            v:draw(renderContext)
-        end
-
-        self.fly:draw(renderContext)
-        self.hand:draw(renderContext)
-
-        -- Draw the retry screen overlay
-        love.graphics.setColor(0, 0, 0, 0.7)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.printf("Game Over! Press 'Start' to Retry", 0, love.graphics.getHeight() / 2, love.graphics.getWidth(), "center")
-    elseif self.state == "startScreen" then
-        love.graphics.draw(self.titleBackground, 0, 0)
-
-        -- -- Draw the retry screen overlay
-        -- love.graphics.setColor(0, 0, 0, 0.7)
-        -- love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-
-        -- love.graphics.setColor(1, 1, 1)
-        -- love.graphics.printf("Press Enter to Start", 0, love.graphics.getHeight() / 2, love.graphics.getWidth(), "center")
-    end
+    renderContext:drawGameWorld(self)
 end
 
 function GameWorld:reset()
