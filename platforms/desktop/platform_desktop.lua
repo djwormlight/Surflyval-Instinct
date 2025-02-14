@@ -5,18 +5,9 @@ local Animation = require "Animation"
 
 local asset = require "asset"
 
-local FlyState = {
-    FLYING = "flying",
-    RESTING = "resting",
-    DEAD = "dead",
-    STARVED = "starved"
-}
+local FlyState = require "FlyState"
 
-local FrameAction = {
-    SKIP = "SKIP",
-    STOP = "STOP",
-    HOLD = "HOLD"
-}
+local FrameAction = require "FrameAction"
 
 FoodAnimationFrames = {
     burger = {

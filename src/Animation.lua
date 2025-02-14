@@ -1,11 +1,7 @@
 local Animation = {}
 Animation.__index = Animation
 
-local FrameAction = {
-    SKIP = "SKIP",
-    STOP = "STOP",
-    HOLD = "HOLD"
-}
+local FrameAction = require "FrameAction"
 
 function Animation:new(frames, frameInterval)
     local instance = setmetatable({}, self)

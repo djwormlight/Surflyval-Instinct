@@ -1,12 +1,7 @@
 local Fly = {}
 Fly.__index = Fly
 
-local FlyState = {
-    FLYING = "flying",
-    RESTING = "resting",
-    DEAD = "dead",
-    STARVED = "starved"
-}
+local FlyState = require "FlyState"
 
 function Fly:new(x, y)
     local instance = setmetatable({}, Fly)
