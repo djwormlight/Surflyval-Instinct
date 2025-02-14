@@ -65,29 +65,6 @@ function Fly:draw(renderContext)
     renderContext:drawFly(self)
 end
 
-function Fly:DrawDebugInfo()
-    -- Convert angle to degrees (optional)
-    local angleDegrees = math.deg(self.angle)
-
-    -- Get the width of the text to properly position it in the top right corner
-    local text = string.format("Fly Angle: %.2f°", angleDegrees)
-
-    self:DebugText(text)
-end
-
-function Fly:DebugText(text)
-    -- Set the font and color (optional)
-    love.graphics.setColor(1, 1, 1) -- White color
-
-    -- Get the screen width
-    local screenWidth = love.graphics.getWidth()
-
-    local textWidth = love.graphics.getFont():getWidth(text)
-
-    -- Draw the text in the top right corner
-    love.graphics.print(text, screenWidth - textWidth - 10, 10)
-end
-
 function Fly:GetClockHour(angle)
     -- Convert angle to degrees
     local angleDegrees = math.deg(angle)
