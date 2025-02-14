@@ -299,4 +299,10 @@ function PlatformDesktop:drawHungerMeter(hungerMeter)
     love.graphics.pop()
 end
 
+function PlatformDesktop:getImageDimensions(imagePath)
+    local imageData = love.image.newImageData("assets/" .. imagePath)
+
+    return { imageData:getWidth(), imageData:getHeight() }
+end
+
 return PlatformDesktop

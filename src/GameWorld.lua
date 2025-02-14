@@ -91,9 +91,7 @@ function GameWorld:reset()
     for i = 1, 3 do
         local foodType = foodTypes[math.random(#foodTypes)]
 
-        local imageData = love.image.newImageData("assets/food/" .. foodType .. "-01.png")
-
-        local foodSize = { imageData:getWidth(), imageData:getHeight() }
+        local foodSize = platformContext:getImageDimensions("food/" .. foodType .. "-01.png")
 
         table.insert(self.foods, Food:new(foodType, math.random(100, 700), math.random(100, 500), foodSize[1], foodSize[2]))
     end
