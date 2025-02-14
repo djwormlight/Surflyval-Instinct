@@ -43,21 +43,12 @@ function Fly:update(deltaTime, input)
     self.state = isButtonPressed and FlyState.FLYING or FlyState.RESTING
 
     if self.state == FlyState.FLYING then
-        local leftAxis = input:leftDirectionAxis() + 1
-        local rightAxis = input:rightDirectionAxis() + 1
+        local computed = input:steerFly(self, deltaTime)
 
-        if leftAxis > 0.1 then
-            self.angle = (self.angle - self.rotationSpeed * leftAxis * deltaTime) % (math.pi * 2)
-        end
+        self.angle = computed.angle
 
-        if rightAxis > 0.1 then
-            self.angle = (self.angle + self.rotationSpeed * rightAxis * deltaTime) % (math.pi * 2)
-        end
-
-        self.windowWidth, self.windowHeight = love.window.getMode()
-
-        self.x = (self.x + math.cos(self.angle) * self.speed * deltaTime) % self.windowWidth
-        self.y = (self.y + math.sin(self.angle) * self.speed * deltaTime) % self.windowHeight
+        self.x = computed.x
+        self.y = computed.y
     end
 end
 
