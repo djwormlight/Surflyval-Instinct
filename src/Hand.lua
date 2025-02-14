@@ -79,10 +79,10 @@ function Hand:isReadyToSwat(fly)
     -- Check if the hand's bounding box is close enough to the fly's bounding box
     local horizontalOverlap = self.x < fly.x + fly.width and self.x + self.width > fly.x
     local verticalOverlap = self.y < fly.y + fly.height and self.y + self.height > fly.y
-    
+
     -- Check if the hand is positioned right over the fly, ready to swat
     local closeEnough = math.abs(self.x - fly.x) < 10 and math.abs(self.y - fly.y) < 10
-    
+
     return horizontalOverlap and verticalOverlap and closeEnough
 end
 
