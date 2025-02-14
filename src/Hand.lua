@@ -3,10 +3,7 @@ local asset = require "asset"
 local Hand = {}
 Hand.__index = Hand
 
-handAnimation = {
-    asset:load("swatter/hand-01.png"),
-    asset:load("swatter/hand-02.png"),
-}
+local HandState = require "HandState"
 
 function Hand:new()
     local instance = setmetatable({}, Hand)
@@ -19,39 +16,30 @@ function Hand:new()
 
     instance.speed = 200
 
-    instance.frame = 1
-    instance.frameTimer = 0
+    instance.state = HandState.READY
 
-    instance.activeAnimation = handAnimation
-
-    instance.isSwatting = false
     instance.swatDuration = 0.2
-
-    instance.handCompleted = false
+    instance.swatTimer = 0
 
     return instance
 end
 
 function Hand:update(deltaTime, fly, hungermeter)
-    if self.handCompleted then
+    if self.state == HandState.FINISHED then
         return
     end
 
-    if self.isSwatting then
-        self.frame = 2
-
+    if self.state == HandState.SWATTING then
         self.swatTimer = self.swatTimer + deltaTime
 
         if self.swatTimer >= self.swatDuration then
-            self.isSwatting = false
-
-            self.frame = 1
+            self.state = HandState.READY
 
             if self:isColliding(fly) then
                 fly:triggerDeath()
                 hungermeter:deathTriggered()
 
-                self.handCompleted = true
+                self.state = HandState.FINISHED
             end
         end
     else
@@ -69,7 +57,7 @@ function Hand:update(deltaTime, fly, hungermeter)
         end
 
         if self:isReadyToSwat(fly) then
-            self.isSwatting = true
+            self.state = HandState.SWATTING
             self.swatTimer = 0 -- reset the timer for swatting
         end
     end

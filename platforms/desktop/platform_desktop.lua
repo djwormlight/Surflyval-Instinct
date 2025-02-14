@@ -111,6 +111,23 @@ FlyAnimationFrames = {
     },
 }
 
+local HandState = require "HandState"
+
+local HandAnimationFrames = {
+    [HandState.READY] = {
+        asset:load("swatter/hand-01.png")
+    },
+    [HandState.SWATTING] = {
+        asset:load("swatter/hand-02.png")
+    },
+    [HandState.SWATTED] = {
+        asset:load("swatter/hand-02.png")
+    },
+    [HandState.FINISHED] = {
+        asset:load("swatter/hand-01.png")
+    },
+}
+
 local previousState = {}
 
 function PlatformDesktop:new()
@@ -122,7 +139,7 @@ function PlatformDesktop:new()
 end
 
 function PlatformDesktop:updateAnimations(deltaTime)
-    for _key, animation in pairs(self.animations) do
+    for _index, animation in ipairs(self.animations) do
         animation:update(deltaTime)
     end
 end
@@ -176,7 +193,9 @@ function PlatformDesktop:drawFly(fly)
 
     local direction = fly:GetClockHour(fly.angle)
 
-    if previousState[objId] ~= fly.state then
+    local serializedState = fly.state == FlyState.FLYING and fly.state .. "[" .. direction .. "]" or fly.state
+
+    if previousState[objId] ~= serializedState then
         if fly.state == FlyState.FLYING then
             self.animations[objId]:changeFrames(FlyAnimationFrames[FlyState.FLYING][direction])
         else
@@ -196,7 +215,7 @@ function PlatformDesktop:drawFly(fly)
 
     love.graphics.pop()
 
-    previousState[objId] = { state = fly.state, direction = direction }
+    previousState[objId] = serializedState
 end
 
 function PlatformDesktop:drawFood(food)
@@ -232,15 +251,31 @@ function PlatformDesktop:drawFood(food)
 end
 
 function PlatformDesktop:drawHand(hand)
+    if hand.handCompleted then
+        return
+    end
+
+    local objId = tostring(hand)
+
+    self.animations[objId] = self.animations[objId] or Animation:new(HandAnimationFrames[hand.state])
+
+    if previousState[objId] ~= hand.state then
+        self.animations[objId]:changeFrames(HandAnimationFrames[hand.state])
+    end
+
     love.graphics.push()
 
     love.graphics.translate(hand.x, hand.y)
 
     love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(hand.activeAnimation[hand.frame], -hand.activeAnimation[hand.frame]:getWidth() / 2, -hand.activeAnimation[hand.frame]:getHeight() / 2)
+    local currentFrame = self.animations[objId]:getCurrentFrame()
+
+    love.graphics.draw(currentFrame, -currentFrame:getWidth() / 2, -currentFrame:getHeight() / 2)
 
     love.graphics.pop()
+
+    previousState[objId] = hand.state
 end
 
 function PlatformDesktop:drawHungerMeter(hungerMeter)
