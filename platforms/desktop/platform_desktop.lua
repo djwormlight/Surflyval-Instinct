@@ -174,9 +174,11 @@ function PlatformDesktop:drawFly(fly)
 
     self.animations[objId] = self.animations[objId] or Animation:new()
 
+    local direction = fly:GetClockHour(fly.angle)
+
     if previousState[objId] ~= fly.state then
         if fly.state == FlyState.FLYING then
-            self.animations[objId]:changeFrames(FlyAnimationFrames[FlyState.FLYING][fly:GetClockHour(fly.angle)])
+            self.animations[objId]:changeFrames(FlyAnimationFrames[FlyState.FLYING][direction])
         else
             self.animations[objId]:changeFrames(FlyAnimationFrames[fly.state])
         end
@@ -194,7 +196,7 @@ function PlatformDesktop:drawFly(fly)
 
     love.graphics.pop()
 
-    previousState[objId] = fly.state
+    previousState[objId] = { state = fly.state, direction = direction }
 end
 
 function PlatformDesktop:drawFood(food)
