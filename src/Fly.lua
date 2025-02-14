@@ -16,8 +16,6 @@ function Fly:new(x, y)
     instance.speed = 200 * 3 * 1.6
     instance.rotationSpeed = math.rad(180)
 
-    instance.windowWidth, instance.windowHeight = love.window.getMode()
-
     instance.state = FlyState.FLYING
 
     -- 260 width x height
